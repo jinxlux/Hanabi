@@ -1,0 +1,42 @@
+190126 Working Session
+
+1. We have agreed on an actor actions model:
+
+Actor(Player):
+  Actions:
+    CreateTable
+    JoinTable
+    PlayCard
+    DiscardCard
+    GiveHint
+    LeaveTable
+    PlayerNotes
+    RandomDiscard
+    ViewDiscards
+    StartGame
+    ReadyGame
+
+Actor(AI):
+  Actions:
+    JoinTable
+    PlayCard
+    DiscardCard
+    GiveHint
+
+Actor(Server):
+  Actions:
+    MakeTable
+    InitGame
+    AllowJoin
+    SendState
+    TerminateGame
+
+The requirement docs will be split for the following people
+
+Hugh:  3.1, 3.9, 3.8
+Shawn: 2.3, 2.4, 2.5
+Jerry: 3.2
+Mels:  2.2, 3.5
+Evan:  3.3, 3.4, 3.7
+
+Sections 2.1 and 3.6 were agreed to be tabled for the time being.

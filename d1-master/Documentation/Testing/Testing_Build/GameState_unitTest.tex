@@ -1,0 +1,18 @@
+\section{GameState}
+\begin{description}
+	\item[appendDiscard] Adds a new discarded card to the linked list of discards.
+	\begin{itemize}
+		\item Linked list length Incremented: The linked list of discards should increment by one due to append.
+		\item The Last Element: The last element in the linked list should be the recently discarded card.
+	\end{itemize}
+	\item[updateCardsOnTable] Updates cards played on the table after a legal card is played.
+	\begin{itemize}
+		\item New Card in Array: The played card can be found in the array of cards on table.
+		\item Correct Index: The played card is in the correct index or position.
+    \end{itemize}
+    \item[updatePlayerHand] Updates cards in a player's hand in the array of players.
+	\begin{itemize}
+		\item Card Played and Replaced: The card that is played gets replaced by a new card (expect the last round).
+		\item New Card in Hand: A new card is drawn by the player who played a card.
+	\end{itemize}
+\end{description}

@@ -1,0 +1,24 @@
+1. Amendments to Agenda
+
+2. Action Items
+	a) Agreement on requirements division
+	b) Agreement on the time of working session (every friday)
+
+3. Agenda Items
+    a) Discuss problems of requirement documentation 
+       (any problems need to share and talk we meet when we do our assignment)
+       - A few of the actions we came up with for the player actor will not be
+       applicable given what we now know about how the server will function
+            - randomDiscard
+            - votekick
+            - ready
+            - start
+        - A new potential action is:
+            - AFK (allow the AI to play for you)
+        - We need a better model of the server from an actor/actions perspective
+        as right now our current model is based entirely on assumptions.
+        - Some of the other sections are probably not very applicable to our
+        project and can be removed.  We've currently tabled both 2.1 and 3.6,
+        I believe that now 3.7 may also be unneeded
+    b) Discuss the formation of requirement documentation 
+        (After we all finish our assignment, how we put them together)

@@ -1,0 +1,29 @@
+190129 Minutes
+CMPT370, Group D1
+
+Action Items:
+
+1. We need to start working on seperate branches
+2. Division of work was agreed on
+3. Regular Friday meetings was agreed on
+4. We need to make a Q&A section in the slack
+
+Agenda Items:
+
+1. Our actors model needs to be changed slightly, we originally considered
+the player/game-creator as 1 actor who varied by only 1 action each (create
+game and join game).  We should actually consider them to be two seperate
+roles.
+
+2. Various additional items have been tabled from the table of contents as
+we have realised some of them are nessessary after the weekend of working on
+them/considering them.  These sections are:
+    3.7 will be stripped down to only 3.7.1
+    3.4 will be kept as groundwork for the design phase, tabled for now
+    2.5.2 will be tabled (tabled as it will be addressed by software/JVM)
+    2.4.4 will be tabled (redundant with 3.4)
+    2.4.1 will be tabled (too specific to business applications)
+    
+3. We agreed that the current system of individually working on the sections is
+good, and merging them into a Google Doc for formatting is probably the best
+course of action for the final product.

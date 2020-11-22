@@ -1,0 +1,26 @@
+190205 Minutes
+CMPT370, Group D1
+
+Action Items:
+	current maintainer to look into giving one of the team members maintainer 
+	privileges on gitlab.
+	
+Agenda Items:
+	- Design patterns and architecture to be discussed further during lectures
+	to avoid premature decisions.  
+	- Talked about refining the writing process by making use of the tools 
+	provided by git. 
+	- Important Notes: 
+		1) Design depends on the requirements doc. In the process of
+	constructing the design doc, we should constantly use requirements as a 
+	reference or skeleton.
+		2) Design doc is for developers! Given a complete design document,
+	a developer that hasn't previously worked on should be able to construct
+	it without major issues. 
+	
+	- Setting up git to automatically build a pdf out individual text documents
+	that use Tex markup. Need maintainer permission to make a hook for 
+	accomplishing this as well. 
+	- Settled on starting with Tex from the beginning for the design phase.
+	
+	

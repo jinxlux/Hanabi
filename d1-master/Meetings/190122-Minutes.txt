@@ -1,0 +1,35 @@
+190122 Minutes
+CMPT370, Group D1
+
+Action Items:
+
+1. Team policy must be made explicit and go in the repo.  We will decide on a
+specific policy this week and upload a signed policy before the offical meeting
+next Tuesday.
+
+2. The product perspective should be shorter, maybe we should consider removing
+the external interfaces section from this as well.
+
+3. Use-cases should be moved to product functions, it is better suited there.
+
+4. Actors should be introduced BEFORE the use-cases, this will make the
+document flow better.
+
+5. Reliability requirements should be short, or possibly removed and added only
+later as a "nice to have".
+
+6. We need to discuss the GUI and come up with some basic mock-ups.
+
+7. We need to split up the workload by introduction/requirements.  One person
+should be in charge of the introduction by themselves while the rest of the
+document will be handled by everyone else.
+
+General Discussion Items:
+
+1. We should focus more on brainstorming for the GUI aspect of the project.
+
+2. We should look into some of the built in Java AI libraries and start
+thinking about how to incorporate them.
+
+3. Meeting once a week is probably good for now, but should probably be
+dependant on the deadlines themselves.

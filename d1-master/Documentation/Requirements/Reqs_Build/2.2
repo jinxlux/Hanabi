@@ -1,0 +1,124 @@
+2.2 Product Functions
+
+Through both the CLI and GUI, the user will be able to play the card game 
+Hanabi. The game involves 3 basic actions those being:
+    - play a card,
+    - discard a card, and
+    - give a hint.
+    
+The program allows a user to do one of the following 3 actions pre-game:
+    - create a table by specifying the game options,
+    - join a table through a game-id,
+    - make an AI player join the game through a game-id.
+
+The game is terminated when all of the in-game fuses run out, there are no more
+cards to draw (each player allowed one more turn after this happens) or one or 
+more of the players disconnect from the server.
+
+2.2.1 Actors and Use Cases
+There are 3 actors in this program:
+    - a game master, 
+    - a regular player, and
+    - an AI bot.
+
+A game master (GM) is the creator of the table and is responsible for specifying 
+the number of players (including themselves) that will be playing. The action of 
+joinin a table is not possible for a GM, because as soon as they request the 
+creation of a new table they automatically join this new table. Other than the
+pre-game setup a GM's capabilites and possible actions are identical to that
+of a regular player. Possible actions for a GM are:
+    - Create table
+    - Play a card
+    - Give a hint
+    - Discard a card
+    - View discarded cards
+    - Create personal notes for each card
+    - Start the AI (AFK)
+    - Stop the AI (BOK)
+    - Exit table
+
+A regular player's available pre-game action is joining a game, which includes
+connecting to an already created server through a game-id. A regular player can:
+    - Join table (player)
+    - Play a card
+    - Give a hint
+    - Discard a card
+    - View discarded cards
+    - Create personal notes for each card
+    - Start the AI (AFK)
+    - Stop the AI (BOK)
+    - Exit table
+    
+An AI bot is invoked by a human and given unique identyfying information along
+with a game-id, which enable it to join the desired server. Upon joining, the
+BOT is expected to play until the game is terminated. An AI Bot can:
+    - Join table (AI)
+    - Play a card
+    - Give a hint
+    - Discard a card
+    - View discarded cards
+
+List of actions: 
+- Create table
+    This action is only available for the game master. The GM is supposed to 
+    give some options like the number of players and the time limit for making
+    a move as option for the new server. 
+
+- Join table (player/AI)
+    (player) A player can join a server by specifying the game-id. After this 
+    they are able to do all of the list in-game actions.
+    
+    (AI) Techincally, a human invokes the AI with a game-id and identifying 
+    token to join a server.
+    
+- Play a card
+    Due to the nature of Hanabi, a player is completely unaware (at least at the
+    very beginning) of their own hand. A typical game would involve playing a 
+    card only after recieving a relevant hint. Upon selecting a card to play, 
+    the card is then "placed on the table face-up" and if it was a valid move,
+    meaning it was a continuation of an existant pile or a start of a new one,
+    the card is placed on top of the relevant pile. If the move was invalid, 
+    the card is moved to the discard pile and the number of fuses decreases by
+    one. After this action is completed, other players at the table will be 
+    able to see the updated state of the table (each pile's top card, number of
+    fuses, discard pile are the 3 things that subject to change).
+    
+- Give a hint
+    The precondition for this action is there being at least one available 
+    information token. After selecting which player should be given a hint,
+    along with the properties of the card(s) to give information about, the 
+    entire table is informed of the given information. The hint may be about 
+    either the color or the number of the card(s), but not both. 
+    
+- Discard a card
+    Upon selecting the discard a card action and which card should be discarded, 
+    only if the number of available information tokens is less than 8, the 
+    selected card is added to the discarded cards, 1 information token is 
+    restored, and a new card is drawn from the cards pile.  
+    
+- View discarded cards
+    At any point during the game, it is possible to view all the cards until 
+    that point in the game that were discarded. 
+
+- Create personal notes for each card
+    Along with recieving regular hints from a plyer during a game of Hanabi 
+    there is the possibility of recieving pseudo-hints about one's cards.
+    These pieces of information can be hard to keep mental track of which is
+    why each player has the ability to mark any card in their with a guessed
+    color or number.
+
+- Start the AI (AFK)
+    At any point during the game a player can activate the AFK (Away From 
+    Keyboard) option, which invokes an AI bot that plays for the player while
+    they are gone. 
+
+- Stop the AI (BOK)
+    Upon deactivating the option, the control of one's hand is returned to 
+    them indicating that they are Back On Keyboard (BOK).
+
+- Exit table
+    Both regular players and the game master are allowed to exit the server
+    at any point during the game. After selecting this action the connection
+    to the server is severed and the interfaces closes.
+    
+

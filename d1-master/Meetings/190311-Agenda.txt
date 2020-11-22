@@ -1,0 +1,18 @@
+190311 Agenda
+CMPT370, Group D1
+
+1. Amendments to Agenda
+
+2. Action-Items
+    -
+
+Agenda Items:
+    - Let's decide our pairs for pair programming
+    - Come up with a timeline for implementation, maybe something like:
+        - Write End-To-End Tests
+        - Write Integration Tests
+        - Write Unit Tests
+        - Scaffolding (test integration)
+        - Documentation
+        - Implementation (test units)
+        - Testing (end-to-end)

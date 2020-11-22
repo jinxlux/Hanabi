@@ -1,0 +1,32 @@
+190114 Agenda
+CMPT370, Group D1
+
+1. Amendments to Agenda
+
+2. Action-Items
+- Self introduction
+	- Name
+	- Some hobbies
+	- What you're good at (related to this project)
+	- Describe yourself in 1 sentence
+	- exchange our courses' schedule (when we all have free time)
+	
+- Code of Conduct
+	- The University CoC should suffice
+	- Please bring additional concerns if you have any
+
+Agenda Items:
+	- We don't have a requirements documentation format
+	- We don't have a file structure for our repo
+	- Communication (exchange phone numbers + slack)
+	- Role distribution (reg. reqirements doc)
+	- Discuss framework options for workflow (Trello or something similar)
+	- Socializing ideas
+	- misc.
+
+New Action Items:
+
+	-
+	-
+	-
+	-

@@ -1,0 +1,15 @@
+190305 Agenda
+CMPT370, Group D1
+
+1. Amendments to Agenda
+
+2. Action-Items
+    - Write a policy for git specifically
+        - Don't push files that won't compile
+        - Don't push on master (unless you're pusing completed work)
+        - Don't copy files from branch to branch (so we can track commits)
+
+
+Agenda Items:
+	- Look at the current coding stylesheet which was picked out in the
+	requirements phase.

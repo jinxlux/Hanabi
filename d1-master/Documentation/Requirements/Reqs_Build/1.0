@@ -1,0 +1,91 @@
+1.0 Introduction
+
+1.1 Purpose
+1.1.1 What is the Purpose of this Document?
+This document will describe the full requirements necessary for a client-server
+based implementation of the card game Hanabi.  It will follow (as much as
+applicible) the standards set out by the IEEE to address the concerns of what
+the client will be capable of, what is required by it, and how those concerns
+will be addressed.
+
+1.2 Scope
+1.2.2 Full Software Description
+The software will function as a client operating in two primary modes:
+a) Human Player: This mode will allow a user to connect directly to a server
+and either create a game, or join an existing game. In this mode the product
+will be responsible strictly for representing the current game state to a user
+and allowing them to interact with that game state.
+
+b) Computer Player: This mode will allow a user to connect a computer player
+to an existing game.  It will have no responsiblity to show game state to the
+user. It is to be implemented to allow it to be run directly from the command
+line, where after starting it will play until the game ends.
+
+1.2.3 Software Features and Limitations
+1.2.3.1 Features
+#### I want to keep the features list from being too big, I think focusing on
+a good small set of cleanly developed features will be more fun than many buggy
+features ####
+I. Client Features
+a) Player should be given a simple, informative GUI with relatively few options
+at most points.  The UI should focus heavily on helping the player keep track
+of the game state by allowing them to check-off or mark their inferences on
+both their cards, and their teammates cards.
+b) Simple animations that help the player understand what's going on in the
+game will be important.  Two types of animations that will be important will be
+i) Animations that help the user understand what they're interacting with in
+the UI like highlighting buttons that are being hovered over, or greying out
+options that aren't available.
+ii) Animations that help the user understand the state of the game.  Since
+information conveyance is so important in Hanabi, these will have to be
+clear.
+c) Simple sounds like clicking and and shuffling noises that give a player
+clear audio feedback when an action has been performed.
+II. Bot Features
+a) Bot should be able to interact meaningfully with any game it is told to
+connect to, and play a game from start to finish.
+b) The bot should perform objectively better than a bot which simply generate
+a random move and plays it if it's legal.
+
+II. Client Limitations
+a) Although the game will have a GUI and basic animations, the general art
+design aspect of the game will be kept minimal, and simple to avoid the 
+excessive time requirements needed to make something in that fashion.
+b) The in-game client options should be kept as minimal as possible, although
+the intention is to add a small set of utility functions to the player, too many
+would not only obsfucate the clarity of the interface, but also add lots of
+complexity but little helpfulness.
+#### I can't think of any good client limitations right now ####
+II. Bot Limitations
+a) Bot should have a relatively low resource usage. This game should not
+require a supercomputer to run a computer player.
+b) The bot does not need to play a perfectly optimal move at all times, it
+doesn't need to perfectly solve the entire game of Hanabi.
+
+1.5.1 System Overview
+The system, in full, should comprise of two main parts:
+1. The client.  The part that allows an end user to play a game of Hanabi with
+a group of other users online.
+2. The AI. A program that can be run which mimics the behavior of a player
+after connecting with a server.
+
+
+1.5.2 Documentation Overview
+1.5.2.1 How this Document is Organized
+This document is organized to outline the basic requirements of the system by
+starting off with large, general, abstract requirements, and refining them to
+down to their more specific, and concrete parts.  As such the documentation is
+laid out that way.  
+
+Section 2.0 is concerned with the overall description of the system to be 
+delivered, with an outline of the actors and their use cases, the constraints
+around which the system will be designed, and finally the set of hardware and 
+software requirements for the end user.
+
+Section 3.0 will concern itself with the more specific, and detail oriented
+aspects of the use-cases outlined in section 2.0, it will expand these use-cases
+into interfaces, functional requirements, performance requirements, and
+maintainability requirements.
+
+Finally, section 4.0 addresses how the requirements of section 3.0 will be
+verified in a reliable, quantifiable way.

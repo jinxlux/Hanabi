@@ -1,0 +1,21 @@
+3.3 Performance Requirements
+
+3.3.1 Number of Users to be Supported
+
+The client will support a direct connection between two users.  A server, and
+an end user.  The server itself will be responsible for handling mutliple users,
+but from the perspective of any individual client running on a machine, there
+are only ever two users connected to it at any given time.
+
+3.3.2 Information Handling
+
+The client will be responsible for communicating with the server, and reciving
+communications from the server.  The parsing of information from the server
+format will need to be fast enough to create a smooth experience for the end
+user.  Although "smooth experience" is hard to quantify, it should be still
+be verifiable in the testing phase.
+
+When the client is running the AI mode, it will need to be able to calculate
+its best move and send a properly formatted packet in the given time-out 
+timeframe.  This means that the basic functionality of the AI must be reasonably
+efficent given its limited time resources.

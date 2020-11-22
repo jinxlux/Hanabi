@@ -1,0 +1,18 @@
+190305 Minutes
+CMPT370, Group D1
+
+Action Item:
+
+- look up the form of coding convention (Google's Java code convention guide)
+- read through the convention (it will come up in the final exam)
+
+
+Agenda Items:
+
+Git policy, everyone agrees:
+- don't push master unless ready to confirm work
+- don't push files that won't compile
+- don't copy files from branch to branch (so we can track commits)
+
+Code convention
+- agree to use and follow Google Java code convention

@@ -1,0 +1,73 @@
+3.1 External Interface
+
+3.1.1 User Interface
+After launching the application, the user will be presented with a title screen 
+(Figure 1). The options given on this screen will allow users to create a new 
+game table, join an existing game, start a basic tutorial, change 
+some basic game settings, and lastly, exit the game.
+
+a) Title Screen Interface:
+
+If the user chooses to create a new game table, a dialog box for creating games
+will be displayed (Figure 2). Users need to enter name of the game table and 
+the maximum number of players that will be allowed in this game. ?? Moreover, it
+also gives users an option whether the game will contains rainbow cards ?? At 
+last, a create game button and a cancel button will be provided.
+
+Next, if the player selects the 'join an existing game' option they will again
+be shown a dialog box.  This dialog box will prompt the user for the name (or
+address of the game they wish to join), and will provide the user a cancel
+button that closes the dialog box.
+
+If the user selects 'options', then the game will display a series of local
+options that can be modified by the player.  This will allow them to slightly
+customize their client.
+
+If the user selects 'tutorial', the game will show a short animation of a few
+rounds of play, explaining the basic rules of the game.
+
+Lastly, if the user selects 'exit game', the client will close gracefully.
+
+b) Game Table Interface:
+
+After successfully creating a game or joining an existing game, the basic game
+interface will be displayed (fig 3). The table will be separated into two
+main parts. The left part of the screen will be the main game table, it is the
+primary area of play (akin to a real table). Each (other) player will have an 
+area on the screen where they're identified, and where the player (client) will
+be able to see their cards. 
+
+Cards in the player's (client) hand will be placed directly at the bottom of the
+screen . At top right corner of each card, there will be 
+two small tag areas (fig 4) which allow player to mark some simple deductions
+on the back of the card. In the middle area, all cards that have been successfully 
+played will be put in order and distinguished by colour. 
+
+The right side of the screen will be utilized as a 'game status' area.
+From top to bottom, all discards can be selected to view, 
+time remaining will indicate time left in current turn, the number of cards left 
+also be shown, and there will have the number of hint token and fuses token 
+left on the table.
+
+
+##################
+Additionally, this application will support command line interface, which would 
+accept users input and display information through terminal.
+
+** I don't believe we need to put the CLI in the req. docs at this point. For the
+most part the CLI will just be a tool we use to help us debug the core
+implementation of the client, and allow us to start working on other aspects
+of the software before the GUI is finished **
+###################
+
+
+3.1.2 Hardware Interface
+Since the application does not have any application specific hardware, this
+section will be brief. The basic hardware requirements are addressed by a keyboard
+and mouse.  The network interfacing can be done by any standard, modern, network
+interface card.
+
+3.1.3 Communication Interface
+Communication between different interfaces would be handled by the underlying 
+operating system, and the communication between clients and server would use 
+common network protocol such as TCP/IP.

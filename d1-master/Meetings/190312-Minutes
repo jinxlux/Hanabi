@@ -1,0 +1,33 @@
+190312 Minutes
+CMPT370, Group D1
+
+Action Item:
+
+- finish unit test plan
+- work on TEST_PLAN document
+
+Agenda Items:
+
+- decide a specific part of the coding for each member
+
+- test plan doc
+	- no specific format, customization is allowed
+	- three main sections
+	- for unit tests:
+		- variable functions, involves more logic functions, no sense to test getters and setters
+		- very basic functions
+	- show that the test plan is effective by choosing only worthwhile parts
+	- for view class test, it will be dealt in end-to-end or integration tests
+	
+- timeline for the last month is good, as below:
+	- Write End-To-End Tests
+        - Write Integration Tests
+        - Write Unit Tests
+        - Scaffolding (test integration)
+        - Documentation
+        - Implementation (test units)
+        - Testing (end-to-end)
+
+- parts to code later: Controller, models, view, AI
+- Everyone has a responsibility for one part, not necessary to stick with only one of the members, pairs can change
+	

@@ -1,0 +1,81 @@
+3.2 Functions
+    
+3.2.1 Validity checking on inputs
+
+The system shall check the inputs from the user. When the user decides to give information,
+the system should check if the number of information token is zero. If it is, the system will reject the
+user's request. The selection of the user will not be registered. Otherwise, the system shall
+register the user's decision. Also, when the user clicks the "Discard a card" button, the system shall
+check whether the number of Information taken equals eight. If there are eight information
+taken, the user's input will not be registered.
+
+3.2.2 Sequences of operations
+
+function: Create a game
+precondition: the user is not in a game
+postcondition: a new game created and the user is in it
+
+function: join a game
+precondition: the user is not in a game
+postcondition: the user is in a game4
+
+function: exit
+precondition: none
+postcondition: the user exit 
+
+function: discard a card
+precondition:  the user is in game; less than eight Information taken left
+postcondition: a card is added to the discard pile; the user get a new card; one information token is replenished
+
+function: play a card
+precondition: the user is in game
+postcondition: a card is added to the cards already played; the user get a new card
+
+function: give information
+precondition: the user is in game; at least 1 information taken is still available to be used
+postcondition: a information taken is consumed; the other player get the information
+
+function: send an AI
+precondition: the game is continued but the user is not in the game
+postcondition: an AI is in the game
+
+function: stop an AI
+precondition: an AI is playing the game for the user
+postcondition: AI quits the game; the user is in the game
+
+function: AI joins the game
+precondition: A game exists
+postcondition: AI is in a game
+
+function: view discarded cards
+precondition: the user is in game
+postcondition: user can observe discarded cards 
+
+function: take notes
+precondition: the user is in game
+postcondition: nodes are added to the user's card
+
+
+3.2.3 Responses to Abnormal Situations
+
+3.2.3.1 ... Overflow & Underflow
+The system shall make sure it is hard to happen; If it happens, the system shall 
+exit with error messages.
+
+3.2.3.2 ... Network Communication Errors
+When the communication fails, the system shall resend the message to the server.
+If the system sends the message with certain amount of times and still receives 
+nothing back, it exits with error message.
+
+3.2.3.3 ... Error Handling and Recovery
+For most nonsignificant errors, the system shall continue to run well.Also, the 
+system shall have a recovery function. Once an damaging error happens, the function will be 
+motivated to stop the crush of the system, and recover the user's data. If the recovery
+function cannot stop the crush, the system shall exit with error message.
+
+
+
+
+	
+
+

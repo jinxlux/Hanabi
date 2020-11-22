@@ -1,0 +1,1084 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{tikz}
+\def\cm{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+\title{\textbf{Hanabi PRD}}
+\author{Mels Kolozyan\\
+		Xudong Li\\
+		Xufeng Lin\\
+		Evan Semenoff\\
+		Tiandu Xie\\
+		}
+\date{}
+\begin{document}
+
+\maketitle
+\newpage
+\tableofcontents
+
+\newpage
+
+\begin{center}
+
+\large{Executive Summary:}
+\end{center}
+
+Hanabi is a cooperative, solitaire-like game based around logical inference.
+Players give hints to help each other reason about hidden information, and use a
+combination of deductions, assumptions, and implications in an attempt to complete
+the game together.
+
+This document outlines the requirements for the implementation of a game client
+by which players can enjoy the game of Hanabi over the internet.  The goal is to make
+an efficient, aesthetic, and well-featured piece of software that captures the
+original spirit of the card game it was based on.
+
+
+\newpage
+
+
+\part{Introduction}
+
+\section{Purpose}
+\subsection{What is the Purpose of this Document?}
+
+This document describes the full requirements necessary for a client-server
+based implementation of the card game Hanabi.  It follows (as much as
+applicable) the standards set out by the IEEE to address the concerns of what
+the client will be capable of, what is required by it, and how those concerns
+will be addressed.
+
+In addition to the requirements of the software from a functional perspective,
+it also outlines the verification requirements that the software will be subject
+to later in development.
+
+\section{Scope}
+\subsection{Full Software Description}
+
+The general scope of the software is split into two distinct modes:
+
+\paragraph{Client Mode:} This mode is the main 'game' mode of the software. In general,
+it allows a user to play Hanabi through a GUI based client.  
+In this mode a player will be able to both create, join, and play games
+of Hanabi.  Additionally, a basic tutorial will available to explain the rules of the game.
+It's important to note that this mode
+is not responsible for the implementation of the game, it is responsible strictly for
+the presentation of the current game state, allowing the user to interact with it.
+
+\paragraph{AI Mode:} This mode will allow a user to connect a computer player
+to an existing game. It is to be implemented to allow execution directly from the command
+line. After being sent to a game, the AI will play until the game is completed.
+
+\subsection{Software Features and Limitations}
+
+\subsubsection{Client Features}
+
+\begin{description}
+
+\item [a)]
+The player will be given a simple, informative GUI that is both intuitive and
+clutter-free.  The UI will focus heavily on helping the player keep track
+of the game state by allowing them to mark inferences on their cards. It will also
+guide the player by highlighting legal moves during gameplay, with the goal
+of making the game more accessible.
+
+\item [b)]
+In order to aid in such accessibility, the game will also feature some basic
+animations to help the player keep track of the game state.  Two types of animations
+that will be important will be:
+
+\begin{description}
+\item[i.] Animations that help the user understand what they're interacting with in
+the UI by doing things like highlighting buttons that are being hovered over, 
+shifting objects when the cursor is placed over-top, or animating buttons when
+they're clicked on.
+
+\item[ii.] Animations that help the user understand the state of the game.  Since
+information conveyance is so important in Hanabi, these will have to be
+clear.
+
+\end{description}
+\item [c)]
+Simple sounds like clicking and shuffling noises that give a player
+clear audio feedback when an action has been performed.
+\end{description}
+
+\subsubsection{Client Limitations}
+\begin{description}
+\item[a)]
+Although the game will have a GUI and basic animations, the general art
+design of the game will be kept minimalistic to fit within the time
+constraints of the project.
+\item[b)]
+The in-game client options should be kept as minimal as possible, although
+the intention is to add a small set of utility functions to the player, too many
+would not only obfuscate the clarity of the interface but also add unnecessary 
+complexity to the program.
+\end{description}
+
+\subsubsection{AI Features}
+\begin{description}
+\item[a)]The AI player should be able to interact meaningfully with any game it is told to
+connect to and play a game from start to finish without causing a timeout.
+
+\item[b)]The AI player should perform objectively better than an AI which simply generates
+a random move and plays it if it's legal.
+
+\end{description}
+
+\subsubsection{AI Limitations}
+\begin{description}
+\item[a)]The AI player will have relatively low resource usage. The client should will
+run any pre-built computer produced after 2010.
+
+\item[b)]The AI player will not play a perfectly optimal move at all times, it
+doesn't need to perfectly solve the entire game of Hanabi.
+
+\end{description}
+
+
+\section{Definitions}
+\subsection{Vocabulary}
+\begin{itemize}
+\item[Action] A specific movement depended on different actors
+\item[Actor] A role in the whole system, including clients and the server
+\item[Bug] Error or failure of the program 
+\item[Fuse] A type of game tokens to indicate remaining mistakes allowed
+\item[Heuristic] Evaluation system providing ideas how the artificial intelligence will choose a move
+\item[Library] A collection of code invoked to construct the program
+\item[Packet] A data packet,the smallest unit of internet data transferred between servers and clients
+\item[Protocol] Rules and regulations for internet networking
+\item[Server] Responds the request from clients, it sets games up and run all processes for programs interacting with the clients
+\end{itemize}
+\subsection{Acronyms}
+\begin{itemize}
+\item[AFK] Away from keyboard
+\item[BOK] Back on keyboard
+\item[FPS] Frames per second
+\item[GM] Game master
+\item[GUI] Graphical user interface
+\item[IEEE] Institute of electrical and electronics engineers
+\item[IP] Internet protocol
+\item[J2SE] Java 2 standard edition
+\item[JVM] Java virtual machine
+\item[TCP] Transmission control protocol
+\item[UI] User interface
+\end{itemize}
+
+\subsection{System Overview}
+The system, in full, should comprise of two main functional components.
+\begin{description}
+\item[The Client]
+The component that allows an end user to play a game of Hanabi with
+a group of other users over a network connection.
+\item[The AI]
+A program that can be run which mimics the behaviour of a player
+after connecting with a server.
+\end{description}
+
+\subsection{Documentation Overview}
+This document is organized to outline the basic requirements of the system by
+starting off with generalized, abstract requirements, and refining them to
+down to their more specific, and concrete parts.
+
+Section 2.0 is concerned with the overall description of the system to be 
+delivered, and will provide an outline of the actors and their use cases, the constraints
+around which the system will be designed, and finally the set of hardware and 
+software requirements for the end user.
+
+Section 3.0 addresses in more detail, the use cases outlined
+in section 2.0, and expands these use cases
+into interfaces, functional, performance, and
+maintainability requirements.
+
+Finally, section 4.0 addresses how the requirements of section 3.0 will be
+verified in a reliable, quantifiable way.
+
+\section{References}
+\subsection{Textbooks and Papers}
+\begin{itemize}
+\item David C. Kung; Object-Oriented Software Engineering: An Agile Methodology; McGraw-Hill, 2013
+
+\item Olivieri, J. (2009). Quantifying Software Reliability and Readiness. 
+        Retrieved from MITRE: http://www.asq509.org/ht/a/GetDocumentAction/i/46491
+        
+\item Steve McConnell; Code Complete 2; Microsoft Press, 2004
+\end{itemize}
+
+\subsection{Technical Documentation}
+\begin{itemize}
+\item Dutchyn, C. (2019, January 22). Intermediate Software Engineering Assignment 1–Requirements.
+
+\item Systems and software engineering — Life cycle processes — Requirements engineering. 
+        (2011, December 01). International Standard. Switzerland : ISO/IEC/IEEE.
+        
+\item IEEE Recommended Practice for Software Requirement Specifications. (1998, October 20). 
+        IEEE Computer Society. Software Engineering Standards Committee.
+\end{itemize}
+
+\newpage
+\part{Overall Description}
+\setcounter{section}{0}
+\section{Product Functions}
+
+This part outlines the overall requirements of the program, it covers the
+main users (actors) and their interactions with the software.  It addresses
+the use cases for said actors and outlines a generalized data flow for the
+software.  Finally, it will define the constraints model that these requirements
+will fall under.
+
+\subsection{Actors}
+
+
+There are three actors in this program:
+
+\begin{enumerate}
+\item
+A game master (GM) is the creator of the table and is responsible for specifying 
+the number of players (including themselves) that will be playing. The action of 
+joining a table is not possible for a GM, because as soon as they request the 
+creation of a new table they automatically join this new table. Other than the
+pre-game setup a GM's capabilities and possible actions are identical to those
+of a regular player.
+
+\item
+A regular player's available pre-game action is joining a game, which includes
+connecting to an already created server through a game-ID. 
+
+\item
+An AI bot is invoked by a human and given unique identifying information along
+with a game-id, which enable it to join the desired server. Upon joining, the
+AI is expected to play until the game is terminated. 
+\end{enumerate}
+
+
+\subsection{Use Cases and Operating Concepts}
+
+With the actors identified, this section will focus on outlining their
+basic interactions with the software by specifying use cases for each
+actor, and then give a brief overview of what these actions entail.
+
+\begin{enumerate}
+\item GM Actions:
+\begin{itemize}
+\item Create table
+\item Play a card
+\item Give a hint
+\item Discard a card
+\item View discarded cards
+\item Create personal notes for each card
+\item Start the AI (AFK)
+\item Stop the AI (BOK)
+\item Exit table
+\end{itemize}
+\item Regular Player Actions:
+\begin{itemize}
+\item Join table (player)
+\item Play a card
+\item Give a hint
+\item Discard a card
+\item View discarded cards
+\item Create personal notes for each card
+\item Start the AI (AFK)
+\item Stop the AI (BOK)
+\item Exit table
+\end{itemize}  
+\item AI:
+\begin{itemize}
+\item Join table (AI)
+\item Play a card
+\item Give a hint
+\item Discard a card
+\item View discarded cards
+\end{itemize}
+\end{enumerate}
+
+\subsubsection{Action Definitions}
+
+\begin{itemize}
+
+\item [\textbf{Create Table}]
+	When the user is performing this action, they are adopting the 'Game Master'
+	roll. 
+
+	This action allows a player to create a table.  They will do so by providing
+	some basic information to the client such as:
+	\begin{itemize}
+	\item[a)] Number of players
+	\item[b)] Time limit for making a move
+	\item[c)] Server name
+	\end{itemize}
+	
+
+\item[\textbf{Join Table}]
+
+This is the basic action which allows either a human player or a computer player
+to join a table.  Although they're essentially the same thing from the point of view
+of the server, they have slightly different usages.
+	\begin{itemize}
+    \item[a)](player) A player can join a server by specifying the game-ID. After this 
+    they are able to do all of the list in-game actions.
+    \item[b)](AI) A human invokes the AI with a game-ID and identifying 
+    token to join a server via the command line.
+	\end{itemize}
+
+\item[\textbf{Play Card}]
+    This is the basic action of playing a card. After selecting a card to play, 
+    the card is then placed on the table face-up.  It is then moved to either
+    the discard pile or the play area depending on the validity of the move.
+    If the move was invalid, 
+    the card is moved to the discard pile and the number of fuses decreases by
+    one. This action consumes a turn, all players are informed of the play and
+    gameplay resumes with the next player.
+
+\item[\textbf{Give Hint}]
+	This is the action which allows one player to communicate information with another player.
+	The hint may be about 
+    either the colour or the number of the card(s), but not both. 
+    This action consumes a turn, all players are informed of the play and
+    gameplay resumes with the next player.
+
+\item[\textbf{Discard}]
+	This action allows a player to discard a card from their own hand if the
+	team does not have the maximum amount of information tokens.  The player
+	will select a card and then select the discard option. The selected card
+	will be added to the discarded cards pile, and one information token will be
+	restored. This action consumes a turn, all players are informed of the play and
+    gameplay resumes with the next player.
+	
+    
+\item[\textbf{View Discards}]
+    At any point during the game, it is possible to view all the cards
+    currently in the discard pile. Selecting this option during
+    gameplay will bring up a graphical list of cards for the player to examine.
+
+\item[\textbf{Create Notes}]
+    This function will allow players to keep track of their own inferences
+    about their cards by giving them an interface which allows them to record 
+    either an assumed number or colour.
+
+\item[\textbf{AFK}]
+    At any point during the game a player can activate the AFK (Away From 
+    Keyboard) option, which invokes an AI bot that plays for the player while
+    they are gone. 
+
+\item[\textbf{BOK}]
+    If the player has switched to AFK mode and an AI is playing for them, this
+    function returns the control of their hand to them.
+
+\item[\textbf{Exit Table}]
+    After selecting this action the connection to the server is severed and
+    the player is returned to the main screen.
+\end{itemize}
+
+The game is terminated when all of the in-game fuses run out, there are no more
+cards to draw (each player is allowed one more turn after this happens) or one or 
+more of the players disconnect from the server.
+
+\subsection{Use Case Diagram}
+
+\includegraphics[height=12cm]{f1.png}
+\subsection{Data Flow Diagram}
+\includegraphics[height=12cm]{f2.png}
+\newline
+This diagram outlines a round of play, and shows how the control is switched from player
+to player.
+
+\section{User Characteristics}
+
+It will be assumed that most users will have basic computer usage skills such as:
+\begin{itemize}
+\item General mouse usage (can click, drag-and-drop, etc.)
+\item General keyboard usage
+\item Interface knowledge (understands that things that are greyed out are unavailable)
+\end{itemize}
+It will also be assumed that users who wish to use the AI functionality of the software
+(sending an AI to play an entire game) will have have the ability to use a command line.
+
+
+\section{Constraints}
+
+This section outlines the basic hardware and software constraints that
+will be required of the end user in order to run the software.
+
+\subsection{Platform}
+
+The software will be designed to run on the JVM and should run on any machine
+with an installation of the J2SE (Java Platform, Standard Edition). This should
+allow for the software to run on most standard, modern operating systems such
+as MacOS, Windows, and Linux.
+
+\subsection{Network Protocols}
+
+The software will use a standard network protocol to communicate with the
+server.  This means that support for TCP will be required.
+
+A two-way network connection is required to allow clients to ask requests 
+and receive messages from the server. The networking protocols used for 
+communication between clients and the server of the system should guarantee 
+data packets being sent and received.
+
+\subsection{Timeframe}
+
+The timeframe for the project is three months.
+
+\section{Assumptions and Dependencies}
+
+This section covers the general assumptions that are made during the requirements
+phase, and the dependencies that will most likely arise during the development,
+and why they will be included in the project.
+
+\subsection{Libraries}
+
+\begin{enumerate}
+\item \textbf{Java Swing}:
+This library will support general GUI design of the software. It will
+be necessary for basic dialogue boxes, error reporting, and window drawing.
+\item \textbf{JavaFX}:
+This library will be used to draw the visual portion of the game
+\item \textbf{EJML}:
+This library will be used by the AI for matrix calculations, as well
+as keeping track of various local game-state variables during play.
+\item \textbf{Java.net}:
+This will be the library responsible for addressing the general
+networking concerns of the software.
+\item \textbf{AspectJ}:
+This extension of Java will aid in developing the software from an
+aspect-oriented approach.
+\end{enumerate}
+
+\newpage
+\part{Specific Requirements}
+\setcounter{section}{0}
+\section{External Interfaces}
+
+After launching the application, the user will be presented with a title screen 
+(fig. 3, Appendix A). The options given on this screen will allow users to create a new 
+game table, join an existing game, start a tutorial, change 
+some basic game settings, and lastly, exit the game.
+
+\subsection{User Interface}
+\begin{itemize}
+
+
+
+\item[a)] Title Screen Interface:
+
+
+
+If the user chooses to create a new game table, a dialogue box for creating games
+will be displayed (fig. 4, Appendix A). Users need to enter name of the game table and 
+the maximum number of players that will be allowed in this game. Finally,
+a create game button and a cancel button will be provided.
+
+Next, if the player selects the 'join an existing game' option they will again
+be shown a dialogue box.  This dialogue box will prompt the user for the name (or
+address of the game they wish to join) and will provide the user a cancel
+button that closes the dialogue box.
+
+If the user selects 'options', then the game will display a series of local
+options that can be modified by the player.  This will allow them to slightly
+customize their client.
+
+If the user selects 'tutorial', the game will show a short animation of a few
+rounds of play, explaining the basic rules of the game.
+
+Lastly, if the user selects 'exit game', the client will close gracefully.
+
+\item[b)] Game Table Interface:
+
+After successfully creating a game or joining an existing game, the basic game
+interface will be displayed (fig. 5, Appendix A). The table will be separated into two
+main parts. The left part of the screen will be the main game table, it is the
+primary area of play (akin to a real table). Each (other) player will have an 
+area on the screen where they're identified, and where the player (client) will
+be able to see their cards. 
+
+Cards in the player's (client) hand will be placed directly at the bottom of the
+screen. At the top right corner of each card, there will be 
+two small tag areas (fig. 6, Appendix A) which allow the player to mark some simple deductions
+on the back of the card. In the middle area, all cards that have been successfully 
+played will be put in order and distinguished by colour. 
+
+
+The right side of the screen will be utilized as a 'game status' area.
+From top to bottom, all discards can be selected to view, 
+time remaining will indicate time left in current turn, the number of cards left 
+will also be shown. In addition, the number of hint tokens and fuses
+left on the table will also be displayed. 
+
+\end{itemize}
+
+\subsection{Hardware Interface}
+
+Since the application does not require any application specific hardware, this
+section will be brief. The basic hardware requirements are addressed by a keyboard
+and mouse.  The network interfacing can be done by any standard, modern, network
+interface card.
+
+\subsection{Communications Interface}
+
+Communication between different interfaces would be handled by the underlying 
+operating system, and the communication between clients and server would use 
+a common network protocol.
+
+\section{Functions}
+\subsection{Validity Checking Inputs}
+
+
+The system shall check the inputs from the user. At any point in the control flow
+of the software, where user input is required, validity checks will be done.
+
+
+\subsection{Sequence of Operations}
+
+This section serves to outline the basic pre and postconditions for
+each of the major operations.
+
+
+\begin{description}
+\item
+\begin{description}
+	\item \textbf{Create Game:}
+	\item Preconditions:
+		\begin{itemize}
+		\item The user is not in a game
+		\end{itemize}	
+	\item Postconditions:
+		\begin{itemize}
+		\item A new game is created, and the user is automatically joined
+		\end{itemize}
+\end{description}
+
+\item
+\begin{description}
+	\item \textbf{Join Game:}
+	\item Preconditions:
+		\begin{itemize}
+		\item The user is not in a game
+		\end{itemize}	
+	\item Postconditions:
+		\begin{itemize}
+		\item The user is entered into a game
+		\end{itemize}
+\end{description}
+
+\item
+\begin{description}
+	\item \textbf{Exit:}
+	\item Preconditions:
+		\begin{itemize}
+		\item None
+		\end{itemize}	
+	\item Postconditions:
+		\begin{itemize}
+		\item The game client is closed
+		\end{itemize}
+\end{description}
+
+\item
+\begin{description}
+	\item \textbf{Discard:}
+	\item Preconditions:
+		\begin{itemize}
+		\item The user is in a game
+		\item The user has selected a card
+		\item Less than eight information tokens are available
+		\end{itemize}	
+	\item Postconditions:
+		\begin{itemize}
+		\item The selected card is added to the discard pile
+		\item A new card is added to the players hand
+		\item One information token is replenished
+		\end{itemize}
+\end{description}
+
+\item
+\begin{description}
+	\item \textbf{Play Card:}
+	\item Preconditions:
+		\begin{itemize}
+		\item The user in in a game
+		\item The user has selected a card
+		\end{itemize}	
+	\item Postconditions:
+		\begin{itemize}
+		\item The selected card is played
+		\item A new card is added to the players hand
+		\end{itemize}
+\end{description}
+
+\item
+\begin{description}
+	\item \textbf{Give Hint:}
+	\item Preconditions:
+		\begin{itemize}
+		\item The user has selected a card to give a hint about
+		\item The user has selected the type of hint to give (colour or number)
+		\item At least one information token is available
+		\end{itemize}	
+	\item Postconditions:
+		\begin{itemize}
+		\item An information token is used
+		\item The selected player is given the hint information
+		\end{itemize}
+\end{description}
+
+\item
+\begin{description}
+	\item \textbf{AFK:}
+	\item Preconditions:
+		\begin{itemize}
+		\item The user is in a game
+		\end{itemize}	
+	\item Postconditions:
+		\begin{itemize}
+		\item An AI player takes over for the player
+		\item The user is put into the AFK state
+		\end{itemize}
+\end{description}
+
+\item
+\begin{description}
+	\item \textbf{BOK:}
+	\item Preconditions:
+		\begin{itemize}
+		\item The user is in the AFK state
+		\end{itemize}	
+	\item Postconditions:
+		\begin{itemize}
+		\item The AI relinquishes control to the user
+		\item The user is taken out of the AFK state
+		\end{itemize}
+\end{description}
+
+
+\item
+\begin{description}
+	\item \textbf{Start AI:}
+	\item Preconditions:
+		\begin{itemize}
+		\item A game exists for the AI to join
+		\end{itemize}	
+	\item Postconditions:
+		\begin{itemize}
+		\item The AI plays a game from start to finish
+		\end{itemize}
+\end{description}
+
+\item
+\begin{description}
+	\item \textbf{View Discards:}
+	\item Preconditions:
+		\begin{itemize}
+		\item The user is in a game
+		\item At least one card has been discarded
+		\end{itemize}	
+	\item Postconditions:
+		\begin{itemize}
+		\item The user is presented with a list of discarded cards
+		\end{itemize}
+\end{description}
+
+
+\item
+\begin{description}
+	\item \textbf{Take Notes:}
+	\item Preconditions:
+		\begin{itemize}
+		\item The user is in a game
+		\item The user has selected a card
+		\end{itemize}	
+	\item Postconditions:
+		\begin{itemize}
+		\item A card in the users hand is marked with some information
+		\end{itemize}
+\end{description}
+
+\end{description}
+
+
+\subsection{Responses to Abnormal Situations}
+
+This section outlines the typical responses to abnormal working behaviour
+in the program. 
+
+\subsubsection{Network Communication Errors}
+When any network communication fails, the client will attempt to resend a message
+to the server.  If, after a certain amount of time no response is received, the
+client will again attempt to send a message to the server.  If after these two
+attempts it receives to acknowledgement, then the client will consider the connection
+broken and exit the game (returning to the main screen).
+
+\subsubsection{Error Handling and Recovery}
+
+We will consider three primary types of errors:
+
+\begin{itemize}
+\item Insignificant Errors: These errors are known bugs that should not affect the
+functionality of the game in a major way. These will include things like:
+	\begin{itemize}
+	\item Minor graphical issues
+	\item Minor display issues
+	\item Typos or grammatical errors
+	\end{itemize}
+
+\item Minor Errors: These errors are known bugs that do not affect the functionality
+of the software in a major way, but potentially make it more inconvenient to use.
+This will include bugs like:
+	\begin{itemize}
+	\item Mislabelled icons
+	\item Graphical issues which obfuscate information
+	\end{itemize}
+	
+\item Major Errors: These errors are both known, and unknown bugs which will either
+cause the software to stop working entirely, or stop working as intended. If a known
+bug in this category is encountered during runtime, the software will report an error
+code and attempt to exit gracefully. This category includes errors such as:
+	\begin{itemize}
+	\item Any standard Java runtime error such as Array Index Out-of-bounds
+	\item Any complete networking failure
+	\item Graphical issues which cause the program to be impossible to use
+	\end{itemize}
+\end{itemize}
+
+\section{Performance Requirements}
+\subsection{Number of Users}
+The client will support a direct connection between two users.  A server, and
+an end user.  The server itself will be responsible for handling multiple users,
+but from the perspective of any individual client running on a machine, there
+are only ever two users connected to it at any given time.
+
+\subsection{Information Handling}
+The client will be responsible for communicating with the server, and receiving
+communications from the server.  The parsing of information from the server
+format will need to be fast enough to create a smooth experience for the end
+user.  Although "smooth experience" is hard to quantify, it should still
+be verifiable in the testing phase.
+
+When the client is running in AI mode, it will need to be able to calculate
+its best move and send a properly formatted packet in the given time-out 
+timeframe.  This means that the basic functionality of the AI must be reasonably
+efficient given its limited time resources.
+
+\section{Adaptability Requirements}
+Any change in the requirements of the project will start a process in which
+the change is incorporated by editing all documentation starting with the
+requirements, all the way to the current project state.  Changes should be
+subject to the same rigour as any feature that was introduced in the initial
+staging of the project, and be brought into the working feature set with the
+same process as any other feature.
+
+
+\newpage
+\part{Verification Requirements} 
+This part will outline the various verification requirements that will be imposed on
+the functional parts of the software.  It will describe quantifiable verification
+methods for all operations that have failure states, as well as methods to
+gauge progress in the harder to quantify aspects of the program such as GUI, usability,
+maintainability, and adaptability.
+\setcounter{section}{1}
+
+
+
+\subsection{User Interface}
+The verification of the user interface would be done by walking through every part
+of the game. For each different screen or dialogue box, every button or selection
+option that is provided will be tested in several conditions. This will allow verification
+that all graphical components are working correctly
+
+\subsection{Hardware Interface}
+A hardware that just meet the minimal requirements will be provided to run the 
+game application. If the application runs well on this hardware, it will be 
+considered as appropriate to run at any hardware that would have better factors.
++
+\subsection{Communications Interface}
+The application will be tested on different operating system that all able to
+use common network protocol such as TCP/IP.
+
+
+
+
+\section{Functions}  
+\subsection{Validity Checking Inputs}
+The verification of correctness for validity checking will be done by attempting
+a range of (known) invalid inputs for every functional component that takes user
+input.  The test cases for a functional component will be designed around trying
+to capture as many edge-cases as possible.  The function will be considered
+verified if it ignores all invalid input in the testing suite. The general set
+of cases to be considered will be highlighted in parallel to the sequence of
+operations section.
+
+\subsection{Sequences of Operations}
+
+This section will highlight the type of input validation that will be done
+for various operations.  Note that any function which does not have any invalid
+input cases (like exiting the game) are not included.
+
+\begin{description}
+\item
+\begin{description}
+	\item \textbf{Create Game:}
+	\item Invalid Inputs:
+		\begin{itemize}
+		\item Connect to a non-existent server
+		\item Overflow the text input field
+		\item Make a game with too many players (more than 5)
+		\item Make a game with too few players (1)
+		\end{itemize}	
+\end{description}
+
+\item
+\begin{description}
+	\item \textbf{Join Game:}
+	\item Invalid Inputs:
+		\begin{itemize}
+		\item Connect to a non-existent server
+		\item Connect to a non-existent game
+		\item Overflow the text input field
+		\item Join a game which is full
+		\end{itemize}	
+\end{description}	
+
+
+\item
+\begin{description}
+	\item \textbf{Discard:}
+	\item Invalid Inputs:
+		\begin{itemize}
+		\item Attempt to discard a card when the token pile is full
+		\item Attempt to discard a card which the player does not hold
+		\end{itemize}	
+\end{description}	
+
+\item
+\begin{description}
+	\item \textbf{Play Card:}
+	\item Invalid Inputs:
+		\begin{itemize}
+		\item Attempt to play a card which the play does not hold
+		\end{itemize}	
+\end{description}	
+
+\item
+\begin{description}
+	\item \textbf{Give Hint:}
+	\item Invalid Inputs:
+		\begin{itemize}
+		\item Attempt to give a hint when no information tokens are available
+		\item Attempt to give an invalid hint (both colour and number)
+		\end{itemize}	
+\end{description}	
+\end{description}
+
+\subsection{Responses to Abnormal Situations}
+
+\subsubsection{Overflow and Underflow}
+To verify that overflow and underflow type situations are handled properly,
+any function which deals with numerical values will be put through a testing
+suite consisting of various overflow/underflow situations.  If a function
+behaves robustly in all cases, it will be considered verified with respect to this section.
+\subsubsection{Network Communication Errors}
+Verification of correct behaviour during network communication errors will be
+done by confirming attempts to reconnect (resend) network information within
+a given time frame. Once the software is able to detect an error and respond
+accordingly within a specified real-time timeframe, it will be considered
+verified.
+\subsubsection{Error Handling and Recovery}
+Finally, confirming that error handling and recovery happen in an appropriate
+manner can only be done on a case-by-case basis.  When an error is discovered,
+it will initially be 'patched' in an attempt to handle and isolate the error,
+this will be categorized (severity) and outlined (nature).  The bug will now
+be considered "known", and appropriate recovery code will be called when this bug
+is triggered.  The appropriate recovery response will be relative to the 
+severity of the error.  Confirming that this system is correct will be done by
+creating test cases consisting of "fake bugs", that trigger the desired response.
+
+
+\section{Performance Requirements}
+
+This section aims to outline the verification process for the performance aspect
+of the software.  
+
+\subsection{Information Handling}
+
+To verify the performance aspect of the networking function, a series of tests
+that aim to quantify the network latency will be performed.  The goal will be
+to get the client behaving in a way that most users would agree is "smooth".
+Although this is hard to quantify directly, a series of user-experience based
+questions should give adequate information on if we're heading in the correct
+direction. Some examples of questions that could aid in quantifying the
+performance of the game are:
+\begin{enumerate}
+\item Did the game feel more, or less responsive?
+\item Were you frustrated with the loading times?
+\item Where can the experience made to be more enjoyable (from the perspective of performance)
+\item Did you notice any considerable slowdown at any point?
+\end{enumerate}
+After every build that addresses the issues of performance, the team will 
+discuss how the new build felt, and if the alterations to the client side
+performance were an enhancement or a detriment to the enjoyability of using
+the application.
+
+Another tool that could be looked at to help determine if performance 
+requirements have been met are examining the FPS,the network
+response time, and the profile of the software while running, but
+these are only tools to help guide the process, as verification will be
+considered complete when a unanimous decision is reached within the team.
+
+
+When running in AI mode, it will suffice to generate tests that will quantify
+response time, and use this as a metric to verify that the AI can, within some
+level of certainty, respond to the server with a valid move in a given period
+of time.
+
+\section{Maintainability Verification}
+A maintainability index will be calculated using both lines-of-code and
+number-of-modules as a pair of quantifiable metrics which will attempt to predict
+the amount of effort that will be required to maintain the program. The goal 
+will not be to explicitly use this index as a measure of success but as a rough
+heuristic to help guide development.
+
+The application of this metric should help to maximize the useful life, 
+efficiency, and safety of the software, while leaving some space for future 
+improvements. Keeping the project simple should facilitate easier bug fixes
+in shorter amounts of time.
+
+\section{Reliability Verification}
+A simple reliability index will be used to quantify the readiness of the system.
+First, a set of quantifiable metrics will be used to guide the process of 
+reliability engineering: failure rate, known remaining bugs, and testing 
+coverage.  Secondly, the individual issues which these categories address
+will be weighted based on the severity of the bug, ranging from serious (the
+bug causes an unexpected fatal error) to trivial (the bug causes a small
+graphical error for a moment).
+
+This scheme aims to guide the design and testing of a reliable system and giving
+a valuable metric to measure progress and quality with.  However, like the
+maintainability index, the goal is not to maximize this value, but to
+use it as an aid to help guide the engineering process.
+
+%\newpage
+\part{Appendices}
+\section{Appendix A: Diagrams and Figures}
+
+
+\includegraphics[height=12cm]{f1.png}
+\newline
+Figure 1, Use-Case Diagram
+
+\includegraphics[height=12cm]{f2.png}
+\newline
+Figure 2, Data Flow Diagram
+
+\includegraphics[height=12cm]{3f1.png}
+\newline
+Figure 3, Title Screen
+
+\includegraphics[height=12cm]{3f2.png}
+\newline
+Figure 4, Create Game Dialogue
+
+\includegraphics[height=10cm]{3f3.png}
+\newline
+Figure 5, Game Table
+
+\includegraphics[height=5cm]{3f4.png}
+\newline
+Figure 6, Player Hand
+
+\section{Appendix B: Comparison between this Document and the ISO standards}
+This appendix will outline the differences between the ISO standardization for the
+requirements documentation, and this documentation.  The sections that were not included
+from the ISO were taken out because they didn't apply to the software as a whole, or
+because they were too specific for business application.  Some extra sections were
+added that are not part of the SRS standard, these sections were added to help aid
+in the verification stage of the project, giving the team a general idea for
+verification requirements.
+
+\newpage
+\begin{tabular}{|l|c|c|}  
+    \cline{2-3}
+    \multicolumn{1}{c|}{} & SRS Standard & Hanabi Req. \\
+    \hline
+
+    Part I Introduction & \cm & \cm \\
+    \hline
+    --1. Purpose & \cm & \cm \\
+    \hline
+    --2. Scope & \cm & \cm \\
+    \hline
+    --3. Definitions & \cm & \cm \\
+    \hline
+    --4. References & \cm & \cm \\
+    \hline
+    --5. Overview & \cm & \cm \\
+    \hline
+
+    Part II Overall Description & \cm & \cm \\
+    \hline
+    --1. Product Perspective & \cm &  \\
+    \hline
+    --2. Product Functions & \cm & \cm \\
+    \hline
+    --3. User Characteristics & \cm & \cm \\
+    \hline
+    --4. Constraints & \cm & \cm \\
+    \hline
+    --5. Assumptions and Dependencies & \cm & \cm \\
+    \hline
+    --6. Apportioning of Requirements & \cm & \\
+    \hline
+
+    Part III Specific Requirements & \cm & \cm \\
+    \hline
+    --1. External Interfaces & \cm & \cm \\
+    \hline
+    --2. Functions & \cm & \cm \\
+    \hline
+    --3. Performance Requirements & \cm & \cm \\
+    \hline
+    --4. Logical Database Requirements & \cm & \cm \\
+    \hline
+    --5. Design Constraints & \cm & \cm \\
+    \hline
+    --6. Software System Attributes & \cm & \cm \\
+    \hline
+    ---6.1. Reliability & \cm & \cm \\
+    \hline
+    ---6.2. Availability & \cm &  \\
+    \hline
+    ---6.3. Security & \cm &  \\
+    \hline
+    ---6.4. Maintainability & \cm & \cm \\
+    \hline
+    ---6.5. Portability & \cm &  \\
+    \hline
+    ---6.6. Adaptability &  & \cm \\
+    \hline
+    --7. Organizing the Specific Requirements & \cm &  \\
+    \hline
+    --8. Additional Comments & \cm &  \\
+    \hline
+
+    Part IV Verification Requirements &  & \cm \\
+    \hline
+    --1. External Interfaces &  & \cm \\
+    \hline
+    --2. Functions & & \cm \\
+    \hline
+    --3. Performance Requirements &  & \cm \\
+    \hline
+
+    Part V Supporting Information & \cm & \cm \\
+    \hline
+    --1. Table of Contents & \cm & \cm \\
+    \hline
+    --2. Appendices & \cm & \cm \\
+    \hline
+
+\end{tabular}
+
+
+
+\end{document}

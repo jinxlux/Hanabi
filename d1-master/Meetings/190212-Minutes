@@ -1,0 +1,29 @@
+190212 Minutes
+CMPT370, Group D1
+
+Action Items:
+
+1. We may need to reconsider which type(s) of architecture fits our design better, and it comes with reasons
+
+2. We need working sessions during the break
+
+3. Main focus on the class design
+
+4. Every member in team still needs to push own work to git
+
+Agenda Items:
+
+1. The main stuff we must have for the DESIGN docs are descriptions of design and class diagram
+	- descriptions including architectures and classes
+	- need to explain what architecture(s) is used and how the chosen architecture(s) does the work
+	- need to do comparisons to other architecture types and give clear reason to choose the certain one(s)
+	- for classes, give detailed information describing classes, such as data types or structures of fields, conditions, inputs, and outputs of methods
+	- similar to Java doc format
+
+2. still need to care about the AI design (it appears in REQS)
+	- provide an AI architecture
+	- consider how it will work in the system
+
+3. traceability matters in the documentations
+	- everything in the previous doc mentioned must appear in the later docs and traceable
+	- a proof of a good architecture

@@ -1,0 +1,67 @@
+\section{Controller Part 2}
+\begin{description}
+	\item[EvalEvent]  Most of the logic of the controller is handled by this function, so there are a lot of test cases here to assure non-faulty communication with the other modules of the program. 
+	\begin{itemize}
+		\item Played(notice): the server sends this notice to other players, and tell them what new card the player drew 
+			\begin{itemize}
+		    	\item UpdatePlayer: test if the new drawn card is now part of the player's hand
+		    	\item IncTurn: make sure the turn is given to the next player
+		    	\item DecCards: verify that the new cards count is decremented
+		    	\item TimeReset: the timer is reset for the next player
+			\item ScoreUp(If it is a legal play): make sure the score is correctly added
+			\item UpdateTable(If it is a legal play): verify that the played card is now placed on the correct position of the table
+			\item DecFuses(If it is NOT a legal play): the fuses should be decreased by 1
+    			\end{itemize}
+		\item Built(reply): the reply is sent to the player who played card if the card is legal
+			\begin{itemize}
+		    	\item IncTurn: make sure the turn is given to the next player
+		    	\item DecCards: verify that the new cards count is decremented
+		    	\item TimeReset: the timer is reset for the next player
+			\item ScoreUp: make sure the score is correctly added
+			\item UpdateTable: verify that the played card is now placed on the correct position of the table
+			\item TokenInc(If the card rank is equal to 5): successfully play a rank 5 card should increase the amount of tokens
+    			\end{itemize}
+		\item Burned(reply): the reply is sent to the player who played card if the card is NOT legal
+			\begin{itemize}
+		    	\item IncTurn: make sure the turn is given to the next player
+		    	\item DecCards: verify that the new cards count is decremented
+		    	\item TimeReset: the timer is reset for the next player
+			\item DecFuses: the fuses should be decreased by 1 if it is an illegal play
+			\item AppendDiscards: test if the card was added to the discard pile
+    			\end{itemize}
+		\item GameEnds(notice): the server will notify all players if certain conditions are met
+			\begin{itemize}
+		    	\item ShowGameOver: a dialog that contains game over information should be poped up
+		    	\item CloseConnection: connection to each player should be closed and game is destroyed
+		    	\item GoToMainMenu: users' screen should atomatically jump to main menu after connection is closed
+			\item SetGameStateNull: game state model should be set to null after previous game is destroyed
+    			\end{itemize}
+		\item Inform(notice to informed player):
+			\begin{itemize}
+		    	\item IncTurn: make sure the turn is given to the next player
+		    	\item TimeReset: the timer is reset for the next player
+			\item DecTokens: verify the amount of tokens is decreased after a hint is given
+			\item UpdateHands: make sure the player's hands is updated accroding to the hint
+    			\end{itemize}
+		\item Inform(notice to other players):
+			\begin{itemize}
+		    	\item IncTurn: make sure the turn is given to the next player
+		    	\item TimeReset: the timer is reset for the next player
+			\item DecTokens: verify the amount of tokens is decreased after a hint is given
+			\item Animation: an information should be given that indicates a hint is given by a player to another
+    			\end{itemize}
+	\end{itemize}
+	\item[SendMove] responsible for sending data to the server
+	\begin{itemize}
+		\item + server responsed: this method will be test together with receive server data, it will check if there is a reply message sent by server after sendMove method is called. Server has to reply something after it sends a JSON package
+	\end{itemize}
+	\item[PackStream] convert a move message from the player's action into a JSON object which can be read by server
+	\begin{itemize}
+		\item + Right move is constructed: check the information that output object contains, a JSON object should be created with correct action, correct player, and correct card based on the user's input
+	\end{itemize}
+	\item[handleInputEvent] listens to mouse events and does functions based on different requests
+	\begin{itemize}
+		\item several mock situation will be given to verify all five mouse events (mouseOver, mouseOut, mousePressed, mouseDraged, mouseReleased) are successfully handled
+	\end{itemize}
+
+\end{description}

@@ -1,0 +1,17 @@
+190122 Agenda
+CMPT370, Group D1
+
+1. Amendments to Agenda
+
+2. Action Items
+	a) Agreement on requirements structure
+	b) Agreement on usage of current frameworks, are we happy with
+	Slack/Trello/Doodle?
+		
+3. Agenda Items
+	a) General division of work in requirements documentation
+	b) Standardization of formatting in requirements documentation
+		- TeX template?
+	c) AI ideas, since we're all interested in the AI portion of the project,
+	what kind of ideas do people have to make the AI effective?
+	d) Discuss details of working sessions (How often we should have one? What should we do? etc.)

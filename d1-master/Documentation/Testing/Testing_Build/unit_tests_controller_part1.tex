@@ -1,0 +1,67 @@
+\section{Controller}
+\begin{description}
+	\item[RecieveServerData] responsible for getting the data off of the buffer
+	\begin{itemize}
+		\item + JSON exists: check that a JSON packet is in the buffered reader. This method is called only when the socket receives a reply from the server, so there has to be an item stored on the buffer.
+	\end{itemize}
+	\item[ParseJSON] should be taking in a json message and outputting an appropriate java construct
+	\begin{itemize}
+		\item + Event Map is correct: check that the provided event map is of the proper format (required by the server). 
+	\end{itemize}
+	
+	\item[EvalEvent] Most of the logic of the controller is handled by this function, so there are a lot of test cases here to assure non-faulty communication with the other modules of the program. 
+	\begin{itemize}
+    \item +Player joined
+    \begin{itemize}
+    \item Send dialog update to let the player know about the new player joining
+    \end{itemize}
+
+		                
+		\item +Player left
+		\begin{itemize}
+		    \item Send dialog update to let the player know about a player leaving the game before a game starts
+		\end{itemize}
+		                
+		\item +Game Starts: a message is received about the start of the game which instantiates the game and the main program itself
+		\begin{itemize}
+		    \item instanties the rest of the game state (fields like player cards and turn)
+		    \item the main loop begins 
+		    \item rtthread for the turn timer
+		\end{itemize}
+		\item +Your Turn: signals the first players about the start of their turn
+		\begin{itemize}
+		    \item the local turn variable (in game state) set to yourself
+		\end{itemize}
+		\item +Invalid Action: received when a sent action was determined to be invalid
+		\begin{itemize}
+		    \item As the GUI does not allow for illegal actions to be sent in the first place, this occurrence throws an exception
+		\end{itemize}
+		\item +Game Cancelled: received when a player leaves the game early
+		\begin{itemize}
+		    \item Message(dialog): lets the player know why the game was stopped, test for the dialog box popping up
+		    \item return to the main menu (test if the main menu was redrawn)
+		\end{itemize}
+		\item +Discarded(notice): the server sends this notice to let them know about a discard that another player did. It also send the information on the new card and a lot of things in the game state must be updated.
+		\begin{itemize}
+		    \item AppendDiscards: test if the card was added to the discard pile
+		    \item UpdatePlayer: test if the new drawn card is now part of the player's hand
+		    \item Inc Turn: make sure the turn is given to the next player
+		    \item DecCards: verify that the new cards count is decremented
+		    \item Tokens Inc: discarded card should increment the amount of tokens
+		    \item NewCardDrawn: Test if the new card is properly drawn on the game screen
+		    \item TimeReset: the timer is reset for the next player
+		    
+		\end{itemize}
+		\item +Accepted(reply): the reply is sent to the player who made the discard
+		\begin{itemize}
+		    \item AppendDiscards: test if the card was added to the discard pile
+		    \item Inc Turn: make sure the turn is given to the next player
+		    \item DecCards: verify that the new cards count is decremented
+		    \item Tokens Inc: discarded card should increment the amount of tokens
+		    \item TimeReset: the timer is reset for the next player
+		\end{itemize}
+		
+	\end{itemize}
+	
+	
+\end{description}

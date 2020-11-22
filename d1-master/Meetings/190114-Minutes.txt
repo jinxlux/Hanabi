@@ -1,0 +1,48 @@
+190114 Minutes
+CMPT 370, Group D1
+
+- Agreed to continue using the same format for meeting agendas.
+
+- Frameworks:
+    - slack for team communication
+    - Trello for task distribution
+    - doodle for meeting time arrangement
+
+- Requirements doc discussion:
+
+    Technical details should not be included at all. The requirements document 
+    is supposed to give a high-level description of the program, meaning what 
+    a user can expect to see in the actual implementation. Overall description 
+    of how the game functions at the top level. Can expect to have more 
+    detailed guidelines for this document from the upcoming Friday's lecture.
+
+- Repository file structure:
+
+    Suggested structure:
+
+        /doc
+        -> /req doc
+        -> /design doc
+        ...
+
+        /meetings
+        --> /Meeting1 or /19XXXX
+            --> 20XXXX-Agenda
+            --> 19XXXX-Minutes
+        --> /Meeting2 ...
+
+- General discussion about the aspects of focus:
+
+    Unanimously agreed to make AI one of the main focus areas of the project.
+    Technical details to be discussed at a later date. As we don't have team 
+    members knowledgable in animation and/or graphical interfaces, the 
+    initial decision was to make our implementation in 2D. Additionally, as 
+    making a text interface for the game would be relatively straightforward 
+    and would also accelerate the initial testing and debugging, started 
+    considering making a 1D interface first.
+
+- Next Meeting:
+    
+    Decided to play a round or two of Hanabi to become more familiar with the 
+    game. The meeting has already been scheduled to 2017/01/17 4pm in Spinks.
+    After this, planning to have a further discussion on the requirements doc.

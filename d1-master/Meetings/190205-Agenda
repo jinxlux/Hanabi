@@ -1,0 +1,26 @@
+190205 Agenda
+CMPT370, Group D1
+
+1. Amendments to Agenda
+
+2. Action Items
+    - One of us should become a maintainer on the repo
+		
+3. Agenda Items
+    - What should we consider going into the design phase?
+    
+    - We need to refine our Git usage and improve before the next phase:
+        - Milestones might be a good idea
+        - Use the merge request interface (get used to it now)
+        - Better usage of tags
+        - More effective usage of branches
+        - Learn how to use git stash
+        - Versioning on the design documents? (as practice for later)
+        - Setup git for auto-building of a pdf via a makefile
+        
+    - We should start with TeX from the beginning for the design phase
+        - We should all probably learn a little TeX, this will allow
+        for more modular creation of the design documents
+        
+    - Some preliminary ideas for AI design have been flesh out
+        - We probably want a logical layer ontop of the statistical layer

@@ -1,0 +1,17 @@
+190212 Agenda
+CMPT370, Group D1
+
+1. Amendments to Agenda
+
+2. Action Items
+	- One of the team members becoming a maintainer for setting 
+	up hooks and correction of possible incorrect versioning. 
+		
+3. Agenda Items
+	- Final discussion on the model-view-controller architecture
+	for the back-end communication with the server.
+	- Architectures for the other components of the software like the
+	AI, GUI, etc. still need to be discussed.
+	- AI statistical approach seems to be decent. Will have to run this
+	through with the TA. 
+	- Talk about the upcoming midterm.

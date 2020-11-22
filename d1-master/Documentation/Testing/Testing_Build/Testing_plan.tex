@@ -1,0 +1,503 @@
+\documentclass[12pt]{article}
+\title{\textbf{Hanabi Testing Plan}}
+\author{Mels Kolozyan\\
+		Xudong Li\\
+		Xufeng Lin\\
+		Evan Semenoff\\
+		Tiandu Xie\\
+		}
+\date{}
+\begin{document}
+
+\pagenumbering{gobble}
+\maketitle
+\newpage	
+\pagenumbering{arabic}
+
+\newpage
+
+\part{Introduction}
+
+This document outlines the testing plan which will be used during the implementation
+phase.  It is split into three parts, the first will cover end-to-end tests, which are
+directly related to use cases found in the requirements documentation.  Next, the
+integration testing will be covered, this will reflect the architectural decisions made
+in the design document.  Finally, unit testing will address the testing of the classes
+and methods which were outline in the design document.
+
+\part{End-To-End Testing}
+
+Each of the following tests reflects a specific use-case as seen in the requirements
+documentation (page 15).  Each use-case will have two cases which will be covered: cases
+which cause the use-case to happen, and cases which won't.  These will be denoted as positive
+(+) and negative (-) cases.
+
+\section{Create Table}
+
+\begin{itemize}
+
+\item[+] Well Formed Input: The user has given a valid string to create a game with
+\item[+] Can Be Made: The game can be made.
+\item[+] Auto Join: Given that both of the previous conditions have been met, the
+user is joined into the game they created.
+
+\item[-] Malformed Input: The user has given an invalid string.
+\item[-] Connection Error: A connection to the server cannot be established.
+\item[-] Game Can't Be Made: The server is unable to create the game.
+
+\end{itemize}
+
+\section{Play Card}
+
+\begin{itemize}
+
+\item[+] Was Valid: This causes two unique things to happen
+\begin{itemize}
+\item The card is played
+\item The score is incremented
+\end{itemize}
+\item[+] Wasn't Valid: This causes two unique things to happen
+\begin{itemize}
+\item The card is put into the discards
+\item A fuse is removed
+\end{itemize}
+Both of these actions cause a set of four actions that they share:
+\begin{itemize}
+\item A new card is dealt
+\item The players turn ends
+\item The card pile is decremented
+\item The timer is reset
+\end{itemize}
+\end{itemize}
+
+\section{Hint}
+
+\begin{itemize}
+\item [+] Hint Given: This causes a hint to be given to another player, this causes four
+things to happen
+\begin{itemize}
+\item The turn is changed
+\item A hint is sent
+\item The number of hint tokens goes down
+\item The timer is reset
+\end{itemize}
+
+\item [-] No Tokens: This stops the player from giving a hint (by making the
+option unavailable)
+
+\end{itemize}
+
+\section{Discard}
+
+\begin{itemize}
+\item[+] Discard: This is the basic discard use-case, it causes many things to happen.
+\begin{itemize}
+\item The tokens go up
+\item A new card is drawn
+\item A card is appended to the discards
+\item The number of cards left is decremented
+\item The turn ends
+\item The timer is reset
+\end{itemize}
+
+\item [-] Tokens Full: This stops the player from discarding (by making the action
+into a null action)
+
+\end{itemize}
+
+\section{View Discards}
+
+\begin{itemize}
+\item[+] View Discards: The discards are drawn as an overlay on-top of the screen.
+
+\item[-] Drawn Improperly: There are a few cases to consider
+\begin{itemize}
+\item Not drawn in the correct order
+\item Not drawing the correct cards
+\item Not drawing the discards (drawing some other cards)
+\end{itemize}
+
+\end{itemize}
+
+\section{Personal Notes}
+
+\begin{itemize}
+\item[+] Personal Notes: Drawn as an overlay on top of the screen
+\item[+] Cyclical hints: The hints cycle properly when clicking on them
+
+\item[-] Drawn Improperly: The hint graphics don't reflect their state
+\item[-] Broken Button: The button doesn't work
+
+\end{itemize}
+
+\section{Start AI}
+
+\begin{itemize}
+\item[+] AI Starts: The AI takes over the the game
+\item[-] AI Won't Start: The AI won't start
+\item[-] AI Won't Play: The AI won't make moves
+
+\end{itemize}
+
+\section{End AI}
+
+\begin{itemize}
+\item[+] AI Stops: The AI lets the human player play again
+\item[-] AI Won't Stop: The AI won't stop playing
+\end{itemize}
+
+\section{Exit}
+\begin{itemize}
+
+
+\item[+] Exit: The connection is severed and the player returns to the main menu
+\item[-] Can't Exit: The user can't exit the game without closing the window, or the
+exit button doesn't return them to the main menu.
+\end{itemize}
+\section{Join Table}
+\begin{itemize}
+\item[+] The player can successfully join a table given he meets these preconditions:
+\begin{itemize}
+\item The game is not full
+\item The input is well formed
+\item The game exists
+\end{itemize}
+\item[-] Malformed Input: The string entered is not valid
+\item[-] Connection Error: Cannot connect to the server
+\item[-] Game Doesn't Exist: No game exists with those credentials
+\item[-] Game is Full: There is no more room at the given table
+\end{itemize}
+
+
+
+
+\newpage
+\part{Integration Testing}
+\setcounter{section}{0}
+The integration tests were developed by breaking down the cases of the end-to-end tests, and
+outlining how they fit into the architecture.  For brevity, the symbols C, M, V, and S will
+refer to the controller, the model, the view, and the server, respectively.  This phase will
+outline how the code fits together and will allow us to verify that the modules fit together
+during the scaffolding phase.
+
+
+
+
+
+\section{Create Table}
+
+\begin{itemize}
+
+\item[+] Well Formed Input: C $\rightarrow$ C \newline
+The controller takes in a valid string, and creates a game
+\item[+] Can Be Made: S $\rightarrow$ C $\rightarrow$ M $\rightarrow$ V \newline
+The controller receives verification from the server, a GameState is instantiated,
+and the view begins to draw the table.
+\item[+] Auto Join: C $\rightarrow$ S \newline
+The controller joins the game which was created.
+
+\item[-] Malformed Input: C $\rightarrow$ V \newline
+The controller detects an invalid string, a window is drawn in the view to inform the user
+\item[-] Connection Error: C $\rightarrow$ M $\rightarrow$ V \newline
+The controller cannot connect to the server, this is reflected in the view via a pop-up
+\item[-] Game Can't Be Made: C $\rightarrow$ M $\rightarrow$ V \newline
+For some reason, the game cannot be made.  The user is informed via pop-up
+
+\end{itemize}
+
+\section{Play Card}
+
+\begin{itemize}
+
+\item[+] Was Valid: C $\rightarrow$ S $\rightarrow$ C $\rightarrow$ M $\rightarrow$ V \newline
+The controller sends a valid move to the server, which returns a JSON packet.  The packet
+is parsed, and the game state is updated, which is reflected in the view.
+\item[+] Wasn't Valid: C $\rightarrow$ S $\rightarrow$ C $\rightarrow$ V \newline
+Exactly the same as was valid, but different things are updated.
+\item[+] Null Case: C $\rightarrow$ M $\rightarrow$ V $\rightarrow$ M $\rightarrow$ V \newline
+The user tries to play a move that isn't valid (perhaps attempting to discard when the tokens are
+full).  The controller determines the move is invalid and reverts the client state to before the
+move was attempted.
+\end{itemize}
+
+\section{Hint}
+
+\begin{itemize}
+\item [+] Valid Hint:  C $\rightarrow$ M $\rightarrow$ V $\rightarrow$ C $\rightarrow$ M 
+$\rightarrow$ V $\rightarrow$ C $\rightarrow$ S \newline
+The user selects the first card, and then creates a valid hint packet after enough
+cards are selected.
+
+\item [+] Invalid Hint: C $\rightarrow$ M $\rightarrow$ V $\rightarrow$ C $\rightarrow$ M 
+$\rightarrow$ V \newline
+The user selects a card that conflicts with the other selection while giving a hint. The
+other card is deselected and nothing is sent to the server.
+
+\item [+] Hint Received: S $\rightarrow$ C $\rightarrow$ M $\rightarrow$ V \newline
+A player at the table receives a hint.  The model is updated, and the view plays a short
+animation to convey this information.
+
+\item [-] No Tokens: M $\rightarrow$ V
+If no tokens are available, this is reflected in the view.
+
+\end{itemize}
+
+\section{Discard}
+
+\begin{itemize}
+\item[+] Discard: C $\rightarrow$ S $\rightarrow$ C $\rightarrow$ M $\rightarrow$ V \newline
+Whenever a discard happens, the controller sends a message to the server indicating
+this, once the message is received, the model is updated (discards are appended)
+and the view is updated.
+
+\item [-] Tokens Full: M $\rightarrow$ V \newline
+If the token counter is full, this is reflected in the view.
+\end{itemize}
+
+\section{View Discards}
+
+\begin{itemize}
+\item[+] View Discards: C $\rightarrow$ M $\rightarrow$ V \newline
+The controller detects that the user has opened the discards menu, the client state
+is updated, and the view reflects this change.
+
+\end{itemize}
+
+\section{Personal Notes}
+
+\begin{itemize}
+\item[+] Personal Notes: C $\rightarrow$ M $\rightarrow$ V \newline
+The user clicks on the notes menu, and the notes about the cards are updated in 
+the client state, this is reflected in the view.
+
+\end{itemize}
+
+\section{Start AI}
+
+\begin{itemize}
+\item[+] AI Starts: C $\rightarrow$ M $\rightarrow$ V \newline
+The user requests that the AI plays for them, this creates a new instance of the AI. The button to start the AI is changed to a button that says "Stop AI".
+
+\end{itemize}
+
+\section{End AI}
+
+\begin{itemize}
+\item[+] AI Stops: C $\rightarrow$ M $\rightarrow$ V \newline
+The user requests to get control back.  This is just like the start AI but in reverse.
+\end{itemize}
+
+\section{Exit}
+\begin{itemize}
+
+
+\item[+] Exit: C $\rightarrow$ M $\rightarrow$ V \newline
+The user leaves the game, the model deletes the game state, and the game is set back
+to the main menu.
+
+\end{itemize}
+\section{Join Table}
+\begin{itemize}
+\item[+] Join Table: C $\rightarrow$ S $\rightarrow$ C $\rightarrow$ V \newline
+The controller requests to join a game, the server responds accordingly, and the
+controller instantiates a game state (which is immediately reflected in the view).
+\end{itemize}
+
+\part{Unit Testing}
+\setcounter{section}{0}
+\section{GameState}
+\begin{description}
+	\item[appendDiscard] Adds a new discarded card to the linked list of discards.
+	\begin{itemize}
+		\item Linked list length Incremented: The linked list of discards should increment by one due to append.
+		\item The Last Element: The last element in the linked list should be the recently discarded card.
+	\end{itemize}
+	\item[updateCardsOnTable] Updates cards played on the table after a legal card is played.
+	\begin{itemize}
+		\item New Card in Array: The played card can be found in the array of cards on table.
+		\item Correct Index: The played card is in the correct index or position.
+    \end{itemize}
+    \item[updatePlayerHand] Updates cards in a player's hand in the array of players.
+	\begin{itemize}
+		\item Card Played and Replaced: The card that is played gets replaced by a new card (expect the last round).
+		\item New Card in Hand: A new card is drawn by the player who played a card.
+	\end{itemize}
+\end{description}
+
+\section{ClientState}
+\begin{description}
+	\item[selectCard] Set the card at the given index of the array to Selected
+	\begin{itemize}
+		\item Correct Player: The player should be in the given player index of the player array.
+		\item Correct Card: The card should be in the given card index of the player's hand array.
+		\item Set Selected Cards: The Selected attributes of the selected cards should be set to True.
+	\end{itemize}
+	\item[ToggleMenu] Toggle the boolean value at the index of MenusOpen dictionary.
+	\begin{itemize}
+		\item Test the Toggle: the boolean at the MenusOpen index of the dictionary shall be toggled (set to True if was False, set to False otherwise)
+    \end{itemize}
+\end{description}
+
+\section{Player}
+\begin{description}
+	\item[updateHand] Updates cards in the player's hand in the array of players.
+	\begin{itemize}
+		\item Card Played and Replaced: The card that is played gets replaced by a new card (except the last round).
+		\item New Card in Hand: A new card is drawn by the player who played a card.		
+	\end{itemize}
+\end{description}
+
+\section{Controller}
+\begin{description}
+	\item[RecieveServerData] responsible for getting the data off of the buffer
+	\begin{itemize}
+		\item + JSON exists: check that a JSON packet is in the buffered reader. This method is called only when the socket receives a reply from the server, so there has to be an item stored on the buffer.
+	\end{itemize}
+	\item[ParseJSON] should be taking in a json message and outputting an appropriate java construct
+	\begin{itemize}
+		\item + Event Map is correct: check that the provided event map is of the proper format (required by the server). 
+	\end{itemize}
+	
+	\item[EvalEvent] Most of the logic of the controller is handled by this function, so there are a lot of test cases here to assure non-faulty communication with the other modules of the program. 
+	\begin{itemize}
+    \item +Player joined
+    \begin{itemize}
+    \item Send dialog update to let the player know about the new player joining
+    \end{itemize}
+
+		                
+		\item +Player left
+		\begin{itemize}
+		    \item Send dialog update to let the player know about a player leaving the game before a game starts
+		\end{itemize}
+		                
+		\item +Game Starts: a message is received about the start of the game which instantiates the game and the main program itself
+		\begin{itemize}
+		    \item instanties the rest of the game state (fields like player cards and turn)
+		    \item the main loop begins 
+		    \item rtthread for the turn timer
+		\end{itemize}
+		\item +Your Turn: signals the first players about the start of their turn
+		\begin{itemize}
+		    \item the local turn variable (in game state) set to yourself
+		\end{itemize}
+		\item +Invalid Action: received when a sent action was determined to be invalid
+		\begin{itemize}
+		    \item As the GUI does not allow for illegal actions to be sent in the first place, this occurrence throws an exception
+		\end{itemize}
+		\item +Game Cancelled: received when a player leaves the game early
+		\begin{itemize}
+		    \item Message(dialog): lets the player know why the game was stopped, test for the dialog box popping up
+		    \item return to the main menu (test if the main menu was redrawn)
+		\end{itemize}
+		\item +Discarded(notice): the server sends this notice to let them know about a discard that another player did. It also send the information on the new card and a lot of things in the game state must be updated.
+		\begin{itemize}
+		    \item AppendDiscards: test if the card was added to the discard pile
+		    \item UpdatePlayer: test if the new drawn card is now part of the player's hand
+		    \item Inc Turn: make sure the turn is given to the next player
+		    \item DecCards: verify that the new cards count is decremented
+		    \item Tokens Inc: discarded card should increment the amount of tokens
+		    \item NewCardDrawn: Test if the new card is properly drawn on the game screen
+		    \item TimeReset: the timer is reset for the next player
+		    
+		\end{itemize}
+		\item +Accepted(reply): the reply is sent to the player who made the discard
+		\begin{itemize}
+		    \item AppendDiscards: test if the card was added to the discard pile
+		    \item Inc Turn: make sure the turn is given to the next player
+		    \item DecCards: verify that the new cards count is decremented
+		    \item Tokens Inc: discarded card should increment the amount of tokens
+		    \item TimeReset: the timer is reset for the next player
+		\end{itemize}
+		
+		\item +Played(notice): the server sends this notice to other players, and tell them what new card the player drew 
+			\begin{itemize}
+		    	\item UpdatePlayer: test if the new drawn card is now part of the player's hand
+		    	\item IncTurn: make sure the turn is given to the next player
+		    	\item DecCards: verify that the new cards count is decremented
+		    	\item TimeReset: the timer is reset for the next player
+			\item ScoreUp(If it is a legal play): make sure the score is correctly added
+			\item UpdateTable(If it is a legal play): verify that the played card is now placed on the correct position of the table
+			\item DecFuses(If it is NOT a legal play): the fuses should be decreased by 1
+    			\end{itemize}
+
+        \item +Built(reply): the reply is sent to the player who played card if the card is legal
+			\begin{itemize}
+		    	\item IncTurn: make sure the turn is given to the next player
+		    	\item DecCards: verify that the new cards count is decremented
+		    	\item TimeReset: the timer is reset for the next player
+			\item ScoreUp: make sure the score is correctly added
+			\item UpdateTable: verify that the played card is now placed on the correct position of the table
+			\item TokenInc(If the card rank is equal to 5): successfully play a rank 5 card should increase the amount of tokens
+    			\end{itemize}
+		\item +Burned(reply): the reply is sent to the player who played card if the card is NOT legal
+			\begin{itemize}
+		    	\item IncTurn: make sure the turn is given to the next player
+		    	\item DecCards: verify that the new cards count is decremented
+		    	\item TimeReset: the timer is reset for the next player
+			\item DecFuses: the fuses should be decreased by 1 if it is an illegal play
+			\item AppendDiscards: test if the card was added to the discard pile
+    			\end{itemize}
+		\item +GameEnds(notice): the server will notify all players if certain conditions are met
+			\begin{itemize}
+		    	\item ShowGameOver: a dialog that contains game over information should be poped up
+		    	\item CloseConnection: connection to each player should be closed and game is destroyed
+		    	\item GoToMainMenu: users' screen should atomatically jump to main menu after connection is closed
+			\item SetGameStateNull: game state model should be set to null after previous game is destroyed
+    			\end{itemize}
+		\item +Inform(notice to informed player):
+			\begin{itemize}
+		    	\item IncTurn: make sure the turn is given to the next player
+		    	\item TimeReset: the timer is reset for the next player
+			\item DecTokens: verify the amount of tokens is decreased after a hint is given
+			\item UpdateHands: make sure the player's hands is updated accroding to the hint
+    			\end{itemize}
+		\item +Inform(notice to other players):
+			\begin{itemize}
+		    	\item IncTurn: make sure the turn is given to the next player
+		    	\item TimeReset: the timer is reset for the next player
+			\item DecTokens: verify the amount of tokens is decreased after a hint is given
+			\item Animation: an information should be given that indicates a hint is given by a player to another
+    			\end{itemize}
+	\end{itemize}
+	
+	\item[SendMove] responsible for sending data to the server
+	\begin{itemize}
+		\item + server responsed: this method will be test together with receive server data, it will check if there is a reply message sent by server after sendMove method is called. Server has to reply something after it sends a JSON package
+	\end{itemize}
+	\item[PackStream] convert a move message from the player's action into a JSON object which can be read by server
+	\begin{itemize}
+		\item + Right move is constructed: check the information that output object contains, a JSON object should be created with correct action, correct player, and correct card based on the user's input
+	\end{itemize}
+	\item[handleInputEvent] listens to mouse events and does functions based on different requests
+	\begin{itemize}
+		\item + Verify Mouse Event: several mock situation will be given to verify all five mouse events (mouseOver, mouseOut, mousePressed, mouseDraged, mouseReleased) are successfully handled
+	\end{itemize}
+
+	
+	
+\end{description}
+
+\section{AI}
+\begin{description}
+	\item[devourStack] Move through each move one by one from the stack of moves to create a statistical model for the AI.
+	\begin{itemize}
+		\item + Given Stack Get CPT: The conditional probability table (CPT) is created with correct dimensions and values. 
+	\end{itemize}
+	\item[updateCPT] Update the conditional probability tables (CPT) of the AI.
+	\begin{itemize}
+		\item + Sum of all probabilities: the sum of probabilities from the CPT shall be equal to one.
+    \end{itemize}
+\end{description}
+
+
+\part{Summary}
+
+This testing plan was designed to help aid in construction of the game, and guide the
+coding phase of the project.  The end-to-end tests cover the actual usage of the game
+client, and come directly from the requirements documentation.  The integration tests
+break down the various cases addressed in the end-to-end tests, and map them to corresponding
+parts in the architecture.  Finally, the unit tests address the individual modules (classes
+and methods) and allow us to confirm correct implementation.
+
+\end{document}

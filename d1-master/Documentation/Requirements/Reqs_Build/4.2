@@ -1,0 +1,80 @@
+4.2 Functions
+    
+4.2.1 Validity checking on inputs
+
+The verification of correctness for validity checking will be done by attempting
+a range of (known) invalid inputs for every functional component that takes user
+input.  The test cases for a functional component will be designed around trying
+to capture as many edge-cases as possible.  The function will be considered
+verified if it ignores all invalid input in the testing suite. The general set
+of cases to be considered will be highlighted in parallel to the sequence of
+operations section (3.2.2).
+
+4.2.2 Sequences of operations
+
+function: Create a game
+precondition: the user is not in a game
+postcondition: a new game created and the user is in it
+invalid inputs:
+    - connect to a non-existant server
+    - overflow the text input field
+    - make a game with too many players
+    - make a game with too few players
+
+
+function: join a game
+precondition: the user is not in a game
+postcondition: the user is in a game
+    - connect to a non-existant server
+    - connect to a non-existant game
+
+function: exit
+precondition: none
+postcondition: the user exit
+
+function: discard a card
+precondition:  the user is in game; less than eight Information taken left
+postcondition: a card is added to the discard pile; the user get a new card; one
+information token is replenished
+    - attempt to discard a card when the token pile is full
+    - attempt to discard a card which the player does not hold
+
+function: play a card
+precondition: the user is in game
+postcondition: a card is added to the cards already played; the user get a new card
+    - attempt to play a card which the player does not hold
+
+function: give information
+precondition: the user is in game; at least 1 information taken is still available to be used
+postcondition: a information taken is consumed; the other player get the information
+    - attempt to give an invalid hint (inform a player about a color and a number)
+
+function: send an AI
+precondition: the game is continued but the user is not in the game
+postcondition: an AI is in the game
+
+
+4.2.3 Responses to Abnormal Situations
+
+4.2.3.1 Overflow & Underflow
+To verify that overflow and underflow type situations are handled properly,
+any function which deals with numerical values will be put through a testing
+suite consisting of various overflow/underflow situations.  If a function
+behaves robustly in all cases, it will be considered verified wrt this section.
+
+4.2.3.2 Network Communication Errors
+Verification of correct behavior during network communication errors will be
+done by confirming attempts to reconnect (resend) network information within
+a given time frame. Once the software is able to detect an error, and respond
+accordingly within a specified real-time timeframe, it will be considered
+verified.
+
+4.2.3.3 Error Handling and Recovery
+Finally, confirming that error handling and recovery happen in an appropriate
+manner can only be done on a case-by-case basis.  When an error is discovered,
+it will initially be 'patched' in an attempt to handle and isolate the error,
+this will be categorized (severity) and outlined (nature).  The bug will now
+be considered "known", and appropriate recovery code will called when this bug
+is triggered.  The appropriate recovery response will be relative to the 
+severity of the error.  Confirming that this system is correct will be done by
+creating test cases consisting of "fake bugs", that trigger the desired response.
