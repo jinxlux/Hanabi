@@ -1,7 +1,7 @@
 # Hanabi
 
 > Note: Unfortunately, the project cannot run normally since the server is down after the end of software engineering class. 
-You can still check our documents and codes of our project.
+You can still check documents and codes of our project.
 
 ### Design and Final report
 > [Design Document](https://github.com/jinxlux/Hanabi/blob/main/d1-master/Documentation/Design/DESIGN.pdf)
